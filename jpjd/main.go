@@ -1,18 +1,19 @@
-package main
+package jpjd
 
 import (
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 const host = "http://novel.mikepeng.cn"
-const startUrl = "/owllook_content?url=http://www.suimeng.la/files/article/html/6/6573/2719256.html&name=%E7%AC%AC%E5%85%AD%E4%B9%9D%E4%B8%80%E7%AB%A0%20%E4%B8%87%E5%8D%83%E6%9F%94%E6%83%85%EF%BC%88%E5%85%A8%E5%89%A7%E7%BB%88%EF%BC%81%EF%BC%89&chapter_url=http://www.suimeng.la/files/article/html/6/6573/&novels_name=%E6%9E%81%E5%93%81%E5%AE%B6%E4%B8%81"
+const startUrl = "/owllook_content?url=http://www.suimeng.la/files/article/html/6/6573/2718566.html&name=%E7%AC%AC%E4%B8%80%E7%AB%A0%20%E5%85%AC%E5%AD%90%20%E5%85%AC%E5%AD%90%EF%BC%881%EF%BC%89&chapter_url=http://www.suimeng.la/files/article/html/6/6573/&novels_name=%E6%9E%81%E5%93%81%E5%AE%B6%E4%B8%81"
 
 var startIndex = 1
 
@@ -44,6 +45,7 @@ func handlerFunction(webUrl string) {
 
 	// 获取标题
 	title := doc.Find("#content_name").First().Text()
+	title = strings.TrimSpace(title)
 	fmt.Println("title: " + title)
 
 	// 获取内容
@@ -91,6 +93,22 @@ func handlerFunction(webUrl string) {
 
 	time.Sleep(3000)
 
+	if "" == nextPageUrl {
+		fmt.Println(">>>>>>>>")
+		fmt.Println("已完成")
+		fmt.Println(">>>>>>>>")
+		return
+	}
+
+	//if startIndex > 4 {
+	//	fmt.Println(">>>>>>>>")
+	//	fmt.Println("已停止")
+	//	fmt.Println(">>>>>>>>")
+	//	return
+	//}
+
+	nextPageUrl = strings.Replace(nextPageUrl, "极品家丁", "%E6%9E%81%E5%93%81%E5%AE%B6%E4%B8%81", -1)
+	startIndex++
 	handlerFunction(host + nextPageUrl)
 }
 
